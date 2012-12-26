@@ -1,5 +1,7 @@
 srp_db.txt
-idea/
+.idea/
+atlassian-ide-plugin.xml
+
 #################
 ## Eclipse
 #################
