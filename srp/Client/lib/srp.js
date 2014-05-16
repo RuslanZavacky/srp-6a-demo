@@ -335,7 +335,7 @@ var paramsFromOptions = function (options) {
 
 var random16byteHex = (function() {
   function random() {
-    var wordCount = 4; // 128 bit = 4 x 32
+    var wordCount = 4;
     var randomWords;
 
     // First we're going to try to use a built-in CSPRNG
@@ -349,8 +349,8 @@ var random16byteHex = (function() {
         window.msCrypto.getRandomValues(randomWords);
     }
     // Last resort - we'll use isaac.js to get a random number. It's seeded from Math.random(),
-    // so this isn't ideal, but it'll still greatly increase the space of guesses a hacker would
-    // have to make to crack the password.
+    // but we can run it for 100ms/0.1s to advance it a distance which will be dependent upon 
+    // hardware and js engine. Also we will have the onkeyup skip a char worth of values. 
     else {
         randomWords = [];
         for (var i = 0; i < wordCount; i++) {
@@ -394,9 +394,9 @@ var random16byteHex = (function() {
   }
   
   return {
-  	  'random' : random,
-  	  'isCrypto' : crypto,
-  	  'advance' : advance 
+    'random' : random,
+    'isCrypto' : crypto,
+    'advance' : advance 
   };
 })();
 
@@ -406,3 +406,4 @@ random16byteHex.advance(100);
 var randInt = function () {
   return new BigInteger(random16byteHex.random(), 16);
 };
+

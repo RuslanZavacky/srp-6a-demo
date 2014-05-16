@@ -24,7 +24,7 @@ var Register = {
 
     $(options.passwordId).on('keyup', $.proxy(function (event) {
       $(event.currentTarget).val().length ? me.enableSubmitBtn() : me.disableSubmitBtn();
-
+      random16byteHex.advance(event.keyCode);
       me.onPasswordChange();
     }, me));
   },
