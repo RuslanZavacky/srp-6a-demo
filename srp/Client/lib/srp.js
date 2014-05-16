@@ -14,7 +14,7 @@ var _srp = {};
 _srp.generateVerifier = function (password, options) {
   var params = paramsFromOptions(options);
 
-  var salt = (options && options.salt) || uuid();
+  var salt = (options && options.salt) || random16byteHex.random();
 
   var x = params.hash(salt + params.hash(password));
   var xi = new BigInteger(x, 16);
@@ -333,7 +333,76 @@ var paramsFromOptions = function (options) {
   return ret;
 };
 
+var random16byteHex = (function() {
+  function random() {
+    var wordCount = 4; // 128 bit = 4 x 32
+    var randomWords;
+
+    // First we're going to try to use a built-in CSPRNG
+    if (window.crypto && window.crypto.getRandomValues) {
+        randomWords = new Int32Array(wordCount);
+        window.crypto.getRandomValues(randomWords);
+    }
+    // Because of course IE calls it msCrypto instead of being standard
+    else if (window.msCrypto && window.msCrypto.getRandomValues) {
+        randomWords = new Int32Array(wordCount);
+        window.msCrypto.getRandomValues(randomWords);
+    }
+    // Last resort - we'll use isaac.js to get a random number. It's seeded from Math.random(),
+    // so this isn't ideal, but it'll still greatly increase the space of guesses a hacker would
+    // have to make to crack the password.
+    else {
+        randomWords = [];
+        for (var i = 0; i < wordCount; i++) {
+            randomWords.push(isaac.rand());
+        }
+    }
+    
+    var string = '';
+    
+    for( var i=0; i<wordCount; i++ ) {
+      var int32 = randomWords[i];
+      if( int32 < 0 ) int32 = -1 * int32;
+      string = string + int32.toString(16);
+    }
+
+    return string;
+  };
+  
+  	
+  function isCrypto() {
+    if (window.crypto && window.crypto.getRandomValues) {
+      return true;
+    }
+    else if (window.msCrypto && window.msCrypto.getRandomValues) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  
+  var crypto = isCrypto();
+  
+  function advance(ms) {
+    if( !crypto ) {
+      var start = Date.now();
+      var end = start + ms;
+      while( Date.now() < end ) {
+          isaac.prng(64);
+      }
+    }
+  }
+  
+  return {
+  	  'random' : random,
+  	  'isCrypto' : crypto,
+  	  'advance' : advance 
+  };
+})();
+
+// if it is isaac spend 0.1s advancing the stream
+random16byteHex.advance(100);
+
 var randInt = function () {
-  // XXX XXX need a better implementation!
-  return new BigInteger(uuid().replace(/-/g, ''), 16);
+  return new BigInteger(random16byteHex.random(), 16);
 };
