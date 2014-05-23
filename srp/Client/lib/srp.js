@@ -14,7 +14,7 @@ var _srp = {};
 _srp.generateVerifier = function (password, options) {
   var params = paramsFromOptions(options);
 
-  var salt = (options && options.salt) || uuid();
+  var salt = (options && options.salt) || random16byteHex.random();
 
   var x = params.hash(salt + params.hash(password));
   var xi = new BigInteger(x, 16);
@@ -334,6 +334,6 @@ var paramsFromOptions = function (options) {
 };
 
 var randInt = function () {
-  // XXX XXX need a better implementation!
-  return new BigInteger(uuid().replace(/-/g, ''), 16);
+  return new BigInteger(random16byteHex.random(), 16);
 };
+
