@@ -6,7 +6,7 @@ and it does not require a trusted third party. It effectively conveys a zero-kno
 proof from the user to the server. In revision 6 of the protocol only one password can be guessed
 per connection attempt. One of the interesting properties of the protocol is that even if one or
 two of the cryptographic primitives it uses are attacked, it is still secure. The SRP protocol
-has been revised several times, and is currently at revision 6a.
+has been revised several times, and is currently at revision 6a. [Wikipedia](https://en.wikipedia.org/wiki/Secure_Remote_Password_protocol)
 
 # Goal
-To give people example of using SRP in their applications, so they became more secure.
+To give people example of using SRP in their applications, so they become more secure.
