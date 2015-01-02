@@ -34,7 +34,7 @@ class Srp {
 
     $this->v = new BigInteger($verifier, 16);
 
-    while (!$this->B || bcmod($this->N, 16) === 0) {
+    while (!$this->B || bcmod($this->B, 16) === 0) {
       $this->b = new BigInteger($this->getSecureRandom(), 16);
       $gPowed  = $this->g->powMod($this->b, $this->N);
       $this->B = $this->k->multiply($this->v)->add($gPowed)->powMod(new BigInteger(1), $this->N);
