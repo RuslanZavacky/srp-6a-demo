@@ -21,7 +21,10 @@ if (!empty($_POST['challenge'])) {
 
     $_SESSION['M'] = $srp->getM();
     $_SESSION['HAMK'] = $srp->getHAMK();
-
+    $_SESSION['SRP_AUTHENTICATED'] = false;
+    $_SESSION['SRP_SESSION_KEY'] = $srp->getSesionKey();
+    $_SESSION['SRP_IDENTITY'] = $user->email;
+    
     $result = array('challengeResponse' => $challenge, 'debug' => array(
       'session' => $_SESSION,
       'user' => $user
@@ -29,12 +32,23 @@ if (!empty($_POST['challenge'])) {
   }
 } elseif(!empty($_POST['respondToChallenge']['M'])) {
   if ($_POST['respondToChallenge']['M'] === $_SESSION['M']) {
+
+    // free the proofs as no longer needed
+    unset($_SESSION['M']);
+    unset($_SESSION['HAMK']);
+    // put the key in the session which shows the the user is authenticated
+    $_SESSION['SRP_AUTHENTICATED'] = true;
+    
+    //$tmp = "".$_SESSION['SRP_AUTHENTICATED']." ".$_SESSION['SRP_IDENTITY']." ".$_SESSION['SRP_SESSION_KEY'];
+    
+    // return the server proof (demonstrates server knew the actual registered verifier and so a valid shared key 'K')
     $result = array(
-      'verifyResponse' => array(
-        'HAMK' => $_SESSION['HAMK']
-      )
+        'verifyResponse' => array(
+            'HAMK' => $_SESSION['HAMK']
+        )
     );
   } else {
+      
     $result = array(
       'error' => 'Authentication failed',
       'debug' => array(

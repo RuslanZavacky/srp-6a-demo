@@ -127,6 +127,7 @@ _srp.Client.prototype.respondToChallenge = function (challenge) {
 
   self.S = S;
   self.HAMK = HAMK;
+  self.K = H(S.toString(16));
 
   return {
     M:M
@@ -145,6 +146,16 @@ _srp.Client.prototype.verifyConfirmation = function (confirmation) {
   var self = this;
 
   return (self.HAMK && (confirmation.HAMK === self.HAMK));
+};
+
+/**
+ * Return the shared session key. Note that the server only has the same key if-and-only-if it verifyConfirmation returns true.  
+ * 
+ * returns true or false.
+ */
+_srp.Client.prototype.sessionKey = function () {
+  var self = this;
+  return self.K;
 };
 
 /////// PUBLIC SERVER
