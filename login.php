@@ -32,7 +32,6 @@ if (!empty($_POST['challenge'])) {
   }
 } elseif(!empty($_POST['respondToChallenge']['M'])) {
   if ($_POST['respondToChallenge']['M'] === $_SESSION['M']) {
-
     // put the key in the session which shows the the user is authenticated
     $_SESSION['SRP_AUTHENTICATED'] = true;
     
