@@ -1,8 +1,3 @@
-<?php
-$self = $_SERVER["PHP_SELF"];
-$dir = dirname($self);
-if( $dir == "/") $dir = "";
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +8,7 @@ if( $dir == "/") $dir = "";
         content="SRP-6a PHP Implementation Tutorial &middot; http://zavackiy.com/blog/srp-6a-php-implementation/">
   <meta name="author" content="Ruslan Zavackiy">
 
-  <link  href="<?php echo $dir; ?>/templates/media/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link  href="templates/media/bootstrap/css/bootstrap.css" rel="stylesheet">
   <style type="text/css">
     body {
       padding-top: 40px;
@@ -47,7 +42,7 @@ if( $dir == "/") $dir = "";
     }
 
   </style>
-  <link  href="<?php echo $dir; ?>/templates/media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link  href="templates/media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
   <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -105,17 +100,17 @@ if( $dir == "/") $dir = "";
 
 </div>
 
-<script src="<?php echo $dir; ?>/templates/media/jquery.js"></script>
-<script src="<?php echo $dir; ?>/templates/media/bootstrap/js/bootstrap.min.js"></script>
+<script src="templates/media/jquery.js"></script>
+<script src="templates/media/bootstrap/js/bootstrap.min.js"></script>
 
-<script src="<?php echo $dir; ?>/srp/Client/lib/biginteger.js"></script>
-<script src="<?php echo $dir; ?>/srp/Client/lib/sha256.js"></script>
-<script src="<?php echo $dir; ?>/srp/Client/lib/isaac.js"></script>
-<script src="<?php echo $dir; ?>/srp/Client/lib/random.js"></script>
-<script src="<?php echo $dir; ?>/srp/Client/lib/srp.js"></script>
+<script src="srp/Client/lib/biginteger.js"></script>
+<script src="srp/Client/lib/sha256.js"></script>
+<script src="srp/Client/lib/isaac.js"></script>
+<script src="srp/Client/lib/random.js"></script>
+<script src="srp/Client/lib/srp.js"></script>
 
-<script src="<?php echo $dir; ?>/srp/Client/register.js"></script>
-<script src="<?php echo $dir; ?>/srp/Client/login.js"></script>
+<script src="srp/Client/register.js"></script>
+<script src="srp/Client/login.js"></script>
 
 <script type="text/javascript">
   $(function () {
@@ -134,7 +129,7 @@ if( $dir == "/") $dir = "";
       passwordId: '#password-login',
       passwordSaltId: '#password-login-salt',
       passwordVerifierId: '#password-login-verifier',
-      url: './login.php'
+      url: 'login.php'
     });
 
     var registerForm = $('#register-form');
@@ -150,7 +145,7 @@ if( $dir == "/") $dir = "";
         values[field.name] = field.value;
       });
 
-      $.post('./register.php', values, function (response) {
+      $.post('register.php', values, function (response) {
         if (response.error) {
           $('#register-output').html(response.error);
         } else {
