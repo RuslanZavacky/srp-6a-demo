@@ -33,13 +33,15 @@ class Srp {
     $this->k = new BigInteger($this->hash($this->N->toHex() . $this->g), 16);
 
     $this->v = new BigInteger($verifier, 16);
+    
+    $this->key = "";
 
-    while (!$this->B || bcmod($this->B, $this->N) === 0) {
+    while (!$this->B || bcmod($this->B, $this->N) == 0) {
       $this->b = new BigInteger($this->getSecureRandom(), 16);
       $gPowed  = $this->g->powMod($this->b, $this->N);
       $this->B = $this->k->multiply($this->v)->add($gPowed)->powMod(new BigInteger(1), $this->N);
     }
-
+    
     $this->Bhex = $this->B->toHex();
   }
 
@@ -56,8 +58,9 @@ class Srp {
     $avu = $this->A->multiply($v->powMod($u, $this->N));
 
     $this->S = $avu->modPow($this->b, $this->N);
-
     $Shex       = $this->S->toHex();
+    $this->key = $this->hash($Shex);
+    
     $this->M    = $this->hash($this->Ahex . $this->Bhex . $Shex);
     $this->HAMK = $this->hash($this->Ahex . $this->M . $Shex);
 
@@ -73,6 +76,10 @@ class Srp {
 
   public function getHAMK() {
     return $this->HAMK;
+  }
+  
+  public function getSesionKey() {
+      return $this->key;
   }
 
   /**

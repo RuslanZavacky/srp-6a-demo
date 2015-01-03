@@ -67,6 +67,7 @@ var Login = {
     } else {
       if (me.getClient().verifyConfirmation(response.verifyResponse)) {
         $(document).trigger('success');
+        $('#login-output').append('<b><- Session Key</b><br/>'+me.getClient().sessionKey()+'<br/>');
         $('#login-output').append('<b><- Server</b><br/>success!<br/>');
       }
     }
