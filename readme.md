@@ -9,4 +9,18 @@ two of the cryptographic primitives it uses are attacked, it is still secure. Th
 has been revised several times, and is currently at revision 6a. [Wikipedia](https://en.wikipedia.org/wiki/Secure_Remote_Password_protocol)
 
 # Goal
-To give people example of using SRP in their applications, so they become more secure.
+To give people example of using SRP in their applications, so they became more secure.
+
+# Usage Notes
+This codebase provides JavaScript and PHP library code which perform an SRP proof-of-password. 
+The JavaScript library code is in the folder `srp\Client\lib` and the PHP library code is in `srp\Server\lib`. 
+
+The codebase includes a demonstration application which uses jQuery AJAX and [RedBean](http://redbeanphp.com/) 
+to register users into a SQLite database then authenticates them. SQLite attempts to write into the root directory 
+of the website but the path can be edited in `lib\require.php`. RedBean and SQLite are used for demonstration 
+purposes only and are not needed to use the core SRP library code. 
+
+If the authentication is successful then a PHP session variable `SRP_AUTHENTICATED` is set to `true`. 
+This indicates that the session variables `SRP_USER_ID` and `SRP_SESSION_KEY` have been authenticated. 
+The session key variable matches the JavaScript session key `sessionKey()` and as a strong shared secret key 
+unique to the current authenticated session which could be used for further crypography.

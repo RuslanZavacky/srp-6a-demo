@@ -67,7 +67,7 @@ var Login = {
     } else {
       if (me.getClient().verifyConfirmation(response.verifyResponse)) {
         $(document).trigger('success');
-        $('#login-output').append('<b><- Server</b><br/>success!<br/>');
+        $('#login-output').append('<b><- Server</b><br/>Successfully Authenticated! Shared Strong Session Key: <br/>'+me.getClient().sessionKey()+'<br/>');
       }
     }
 
