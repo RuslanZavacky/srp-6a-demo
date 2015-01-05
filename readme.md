@@ -12,10 +12,14 @@ has been revised several times, and is currently at revision 6a.
 To give people example of using SRP in their applications, so they became more secure.
 
 # Usage Notes
-This codebase provides JavaScript and PHP library code which perform an SRP proof of password. The JavaScript library code is in the folder `srp\Client\lib` and the PHP library code is in `srp\Server\lib`. 
+This codebase provides JavaScript and PHP library code which perform an SRP proof of password. 
+The JavaScript library code is in the folder `srp\Client\lib` and the PHP library code is in `srp\Server\lib`. 
 
-The codebase also includes a demonstration application which uses jQuery and AJAX to register users into a [RedBean](http://redbeanphp.com/) database then authenticates them. RedBean which is used for demonstration purposes only and you may want to use another database (MySQL, PostresQL). 
+The codebase also includes a demonstration application which uses jQuery AJAX and [RedBean](http://redbeanphp.com/) 
+to register users into a SQLite database and then authenticates them. RedBean and SQLite are used for demonstration 
+purposes only and you may want to use your own data access code. 
 
-If the authentication is successful the demo sets a PHP session variable `SRP_AUTHENTICATED` to the value `true`. There is also a PHP session variable `SRP_SESSION_KEY` which matches the JavaScript session key `sessionKey()` which is a strong shared secret key unique to the current authenticated session which could be used for further crypography. 
- 
-
+If the authentication is successful then a PHP session variable `SRP_AUTHENTICATED` is set to `true`. 
+This then shows that the session variables `SRP_USER_ID` and `SRP_SESSION_KEY` have been authenticated. 
+The session key variable matches the JavaScript session key `sessionKey()` and as a strong shared secret key 
+unique to the current authenticated session which could be used for further crypography.
