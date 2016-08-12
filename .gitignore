@@ -165,3 +165,6 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+/vendor/
+/public/assets/bower_components/

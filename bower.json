@@ -1,0 +1,24 @@
+{
+  "name": "srp-6a-demo",
+  "homepage": "https://github.com/RuslanZavacky/srp-6a-demo",
+  "authors": [
+    "Ruslan Zavacky <ruslan.zavackiy@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.0",
+    "bootstrap": "^3.3.7",
+    "big-integer": "*",
+    "isaac": "1.0",
+    "js-sha256": "^0.3.0"
+  }
+}
