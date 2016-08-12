@@ -1,0 +1,22 @@
+{
+  "name": "ruslanzavacky/srp-6a-demo",
+  "description": "Example implementation of SRP-6a protocol using Javascript & PHP",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ruslan Zavacky",
+      "email": "ruslan.zavackiy@gmail.com"
+    }
+  ],
+  "require": {
+    "gabordemooij/redbean": "4.3.2",
+    "phpseclib/phpseclib": "2.0.2",
+    "ralouphie/mimey": "^1.0",
+    "phpunit/phpunit": "^5.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Rz\\": "src/Rz/"
+    }
+  }
+}

@@ -8,7 +8,7 @@
         content="SRP-6a PHP Implementation Tutorial &middot; http://zavackiy.com/blog/srp-6a-php-implementation/">
   <meta name="author" content="Ruslan Zavackiy">
 
-  <link  href="templates/media/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link  href="/assets/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
   <style type="text/css">
     body {
       padding-top: 40px;
@@ -22,10 +22,14 @@
       border: 1px solid #e5e5e5;
       -webkit-border-radius: 5px;
       -moz-border-radius: 5px;
-      border-radius: 5px;
       -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
       -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
       box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
     .form-signin .form-signin-heading,
@@ -39,10 +43,16 @@
       height: auto;
       margin-bottom: 15px;
       padding: 7px 9px;
+      min-width: 220px;
+    }
+
+    .alert {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-top: 0;
     }
 
   </style>
-  <link  href="templates/media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
   <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -57,7 +67,7 @@
 
       <form id="register-form" class="form-signin" method="post">
         <h2 class="form-signin-heading">Registration Form</h2>
-        <input name="email" value="ruslan.zavackiy@gmail.com" type="text" class="input-block-level" placeholder="Email address">
+        <input name="email" value="user@email.com" type="text" class="input-block-level" placeholder="Email address">
         <input id="password" value="random-password" name="password" type="password" class="input-block-level" placeholder="Password">
 
         <input id="password-salt" type="hidden" name="password_salt">
@@ -83,9 +93,9 @@
 
   <div class="row">
     <div class="offset3 span6">
-      <form id="login-form" action="login.php" class="form-signin" method="post">
+      <form id="login-form" action="/login" class="form-signin" method="post">
         <h2 class="form-signin-heading">Login Form</h2>
-        <input id="email-login" value="ruslan.zavackiy@gmail.com" name="email" type="text" class="input-block-level" placeholder="Email address">
+        <input id="email-login" value="user@email.com" name="email" type="text" class="input-block-level" placeholder="Email address">
         <input id="password-login" value="random-password" name="password" type="password" class="input-block-level" placeholder="Password">
 
         <button id="loginBtn" name="registerBtn" class="btn btn-large btn-primary" type="submit">Login</button>
@@ -96,21 +106,18 @@
       </div>
     </div>
   </div>
-
-
 </div>
 
-<script src="templates/media/jquery.js"></script>
-<script src="templates/media/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/bower_components/jquery/dist/jquery.js"></script>
+<script src="/assets/bower_components/big-integer/BigInteger.js"></script>
+<script src="/assets/bower_components/isaac/isaac.js"></script>
+<script src="/assets/bower_components/js-sha256/src/sha256.js"></script>
 
-<script src="srp/Client/lib/biginteger.js"></script>
-<script src="srp/Client/lib/sha256.js"></script>
-<script src="srp/Client/lib/isaac.js"></script>
-<script src="srp/Client/lib/random.js"></script>
-<script src="srp/Client/lib/srp.js"></script>
+<script src="/assets/js/app/lib/random.js"></script>
+<script src="/assets/js/app/lib/srp.js"></script>
 
-<script src="srp/Client/register.js"></script>
-<script src="srp/Client/login.js"></script>
+<script src="/assets/js/app/register.js"></script>
+<script src="/assets/js/app/login.js"></script>
 
 <script type="text/javascript">
   $(function () {
@@ -129,7 +136,7 @@
       passwordId: '#password-login',
       passwordSaltId: '#password-login-salt',
       passwordVerifierId: '#password-login-verifier',
-      url: 'login.php'
+      url: 'login'
     });
 
     var registerForm = $('#register-form');
@@ -145,7 +152,7 @@
         values[field.name] = field.value;
       });
 
-      $.post('index.php', values, function (response) {
+      $.post('/', values, function (response) {
         if (response.error) {
           $('#register-output').html(response.error);
         } else {

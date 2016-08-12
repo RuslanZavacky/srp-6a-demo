@@ -17,7 +17,7 @@ _srp.generateVerifier = function (password, options) {
   var salt = (options && options.salt) || random16byteHex.random();
 
   var x = params.hash(salt + params.hash(password));
-  var xi = new BigInteger(x, 16);
+  var xi = bigInt(x, 16);
   var v = params.g.modPow(xi, params.N);
 
   return {
@@ -31,7 +31,7 @@ _srp.generateVerifier = function (password, options) {
  *
  * options is optional and can include:
  * - a: client's private ephemeral value. String or
- *      BigInteger. Normally, this is picked randomly, but it can be
+ *      bigInt. Normally, this is picked randomly, but it can be
  *      passed in for testing.
  * - SRP parameters (see _defaults and paramsFromOptions below)
  */
@@ -48,9 +48,9 @@ _srp.Client = function (password, options) {
   var a, A;
   if (options && options.a) {
     if (typeof options.a === "string") {
-      a = new BigInteger(options.a, 16);
+      a = bigInt(options.a, 16);
     }
-    else if (options.a instanceof BigInteger) {
+    else if (options.a instanceof bigInt) {
       a = options.a;
     }
     else {
@@ -110,14 +110,14 @@ _srp.Client.prototype.respondToChallenge = function (challenge) {
   // XXX check for missing / bad parameters.
   self.salt = challenge.salt;
   self.Bstr = challenge.B;
-  self.B = new BigInteger(self.Bstr, 16);
+  self.B = bigInt(self.Bstr, 16);
 
   if (self.B.mod(N) === 0) {
     throw new Error("Server sent invalid key: B mod N == 0.");
   }
 
-  var u = new BigInteger(H(self.Astr + self.Bstr), 16);
-  var x = new BigInteger(H(self.salt + H(self.password)), 16);
+  var u = bigInt(H(self.Astr + self.Bstr), 16);
+  var x = bigInt(H(self.salt + H(self.password)), 16);
 
   var kgx = k.multiply(g.modPow(x, N));
   var aux = self.a.add(u.multiply(x));
@@ -149,8 +149,8 @@ _srp.Client.prototype.verifyConfirmation = function (confirmation) {
 };
 
 /**
- * Return the shared session key. Note that the server only has the same key if-and-only-if it verifyConfirmation returns true.  
- * 
+ * Return the shared session key. Note that the server only has the same key if-and-only-if it verifyConfirmation returns true.
+ *
  * returns true or false.
  */
 _srp.Client.prototype.sessionKey = function () {
@@ -165,7 +165,7 @@ _srp.Client.prototype.sessionKey = function () {
  *
  * options is optional and can include:
  * - b: server's private ephemeral value. String or
- *      BigInteger. Normally, this is picked randomly, but it can be
+ *      bigInt. Normally, this is picked randomly, but it can be
  *      passed in for testing.
  * - SRP parameters (see _defaults and paramsFromOptions below)
  */
@@ -178,15 +178,15 @@ _srp.Server = function (verifier, options) {
   var N = self.params.N;
   var g = self.params.g;
   var k = self.params.k;
-  var v = new BigInteger(self.verifier.verifier, 16);
+  var v = bigInt(self.verifier.verifier, 16);
 
   // construct public and private keys.
   var b, B;
   if (options && options.b) {
     if (typeof options.b === "string") {
-      b = new BigInteger(options.b, 16);
+      b = bigInt(options.b, 16);
     }
-    else if (options.b instanceof BigInteger) {
+    else if (options.b instanceof bigInt) {
       b = options.b;
     }
     else {
@@ -202,9 +202,6 @@ _srp.Server = function (verifier, options) {
   } else {
     while (!B || B.mod(N) === 0) {
       b = randInt();
-      /* @todo remove after */
-      b = new BigInteger("5bfa31806d8c46b1ac56a15886340926", 16);
-
       B = k.multiply(v).add(g.modPow(b, N)).mod(N);
     }
   }
@@ -232,7 +229,7 @@ _srp.Server.prototype.issueChallenge = function (request) {
 
   // XXX check for missing / bad parameters.
   self.Astr = request.A;
-  self.A = new BigInteger(self.Astr, 16);
+  self.A = bigInt(self.Astr, 16);
 
   if (self.A.mod(self.params.N) === 0) {
     throw new Error("Client sent invalid key: A mod N == 0.");
@@ -244,8 +241,8 @@ _srp.Server.prototype.issueChallenge = function (request) {
 
   // Compute M and HAMK in advance. Don't send to client yet.
 
-  var u = new BigInteger(H(self.Astr + self.Bstr), 16);
-  var v = new BigInteger(self.verifier.verifier, 16);
+  var u = bigInt(H(self.Astr + self.Bstr), 16);
+  var v = bigInt(self.verifier.verifier, 16);
 
   var avu = self.A.multiply(v.modPow(u, N));
 
@@ -289,12 +286,12 @@ _srp.Server.prototype.verifyResponse = function (response) {
  */
 _srp._defaults = {
   hash:function (x) {
-    return SHA256(x).toLowerCase();
+    return sha256(x).toLowerCase();
   },
-  N:new BigInteger("EEAF0AB9ADB38DD69C33F80AFA8FC5E86072618775FF3C0B9EA2314C9C256576D674DF7496EA81D3383B4813D692C6E0E0D5D8E250B98BE48E495C1D6089DAD15DC7D7B46154D6B6CE8EF4AD69B15D4982559B297BCF1885C529F566660E57EC68EDBC3C05726CC02FD4CBF4976EAA9AFD5138FE8376435B9FC61D2FC0EB06E3", 16),
-  g:new BigInteger("2")
+  N:bigInt("EEAF0AB9ADB38DD69C33F80AFA8FC5E86072618775FF3C0B9EA2314C9C256576D674DF7496EA81D3383B4813D692C6E0E0D5D8E250B98BE48E495C1D6089DAD15DC7D7B46154D6B6CE8EF4AD69B15D4982559B297BCF1885C529F566660E57EC68EDBC3C05726CC02FD4CBF4976EAA9AFD5138FE8376435B9FC61D2FC0EB06E3", 16),
+  g:bigInt("2")
 };
-_srp._defaults.k = new BigInteger(
+_srp._defaults.k = bigInt(
   _srp._defaults.hash(
     _srp._defaults.N.toString(16) +
       _srp._defaults.g.toString(16)),
@@ -305,9 +302,9 @@ _srp._defaults.k = new BigInteger(
  *
  * Options can include:
  * - hash: Function. Defaults to SHA256.
- * - N: String or BigInteger. Defaults to 1024 bit value from RFC 5054
- * - g: String or BigInteger. Defaults to 2.
- * - k: String or BigInteger. Defaults to hash(N, g)
+ * - N: String or bigInt. Defaults to 1024 bit value from RFC 5054
+ * - g: String or bigInt. Defaults to 2.
+ * - k: String or bigInt. Defaults to hash(N, g)
  */
 var paramsFromOptions = function (options) {
   if (!options) {
@@ -320,9 +317,9 @@ var paramsFromOptions = function (options) {
   _.each(['N', 'g', 'k'], function (p) {
     if (options[p]) {
       if (typeof options[p] === "string") {
-        ret[p] = new BigInteger(options[p], 16);
+        ret[p] = bigInt(options[p], 16);
       }
-      else if (options[p] instanceof BigInteger) {
+      else if (options[p] instanceof bigInt) {
         ret[p] = options[p];
       }
       else {
@@ -345,6 +342,6 @@ var paramsFromOptions = function (options) {
 };
 
 var randInt = function () {
-  return new BigInteger(random16byteHex.random(), 16);
+  return bigInt(random16byteHex.random(), 16);
 };
 

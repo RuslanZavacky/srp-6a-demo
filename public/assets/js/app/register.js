@@ -61,4 +61,4 @@ var Register = {
 
     return this.verifier;
   }
-}
+};

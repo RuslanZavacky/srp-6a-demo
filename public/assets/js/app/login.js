@@ -8,7 +8,8 @@ var Login = {
     registerBtnId: '#loginBtn',
     passwordId: '#password-login',
     passwordSaltId: '#password-login-salt',
-    passwordVerifierId: '#password-login-verifier'
+    passwordVerifierId: '#password-login-verifier',
+    loginOutput: '#login-output'
   },
 
   defaults: {
@@ -18,9 +19,10 @@ var Login = {
 
   initialize: function (options) {
     var me = this;
+    var $output = $(Login.options.loginOutput);
 
     if (options) {
-      me.options = options;
+      me.options = $.extend({}, Login.options, options);
     }
 
     $(me.options.formId).on('submit', function (e) {
@@ -31,11 +33,11 @@ var Login = {
         challenge: me.getClient().startExchange()
       };
 
-      $('#login-output').append('<b>-> Client, A</b><br/>' + data.challenge.A + '<br/>');
+      $output.prepend('<b>-> Client, A</b><br/>' + data.challenge.A + '<br/>');
 
       $.post(me.options.url, data, function (response) {
         if (response.error) {
-          $('#login-output').append('<b><- Server</b><br/>' + response.error + '<br/>');
+          $output.prepend('<b><- Server</b><br/>' + response.error + '<br/>');
         } else {
           me.onChallengeResponse(response);
         }
@@ -47,16 +49,17 @@ var Login = {
 
   onChallengeResponse: function (response) {
     var me = this;
+    var $output = $(Login.options.loginOutput);
 
     var data = {
       email: me.getEmail(),
       respondToChallenge: me.getClient().respondToChallenge(response.challengeResponse)
     };
 
-    $('#login-output').append('<b><- Server, Salt</b><br/>' + response.challengeResponse.salt + '<br/>');
-    $('#login-output').append('<b><- Server, B</b><br/>' + response.challengeResponse.B + '<br/>');
+    $output.prepend('<b><- Server, Salt</b><br/>' + response.challengeResponse.salt + '<br/>');
+    $output.prepend('<b><- Server, B</b><br/>' + response.challengeResponse.B + '<br/>');
 
-    $('#login-output').append('<b>-> Client, M</b><br/>' + data.respondToChallenge.M + '<br/>');
+    $output.prepend('<b>-> Client, M</b><br/>' + data.respondToChallenge.M + '<br/>');
 
     $.post(me.options.url, data, function () {
       me.onRespondResponse.apply(me, arguments);
@@ -65,17 +68,18 @@ var Login = {
 
   onRespondResponse: function (response) {
     var me = this;
+    var $output = $(Login.options.loginOutput);
 
     if (response.error) {
-      $('#login-output').append('<b><- Server</b><br/>' + response.error + '<br/>');
+      $output.prepend('<b><- Server</b><br/>' + response.error + '<br/>');
     } else {
       if (me.getClient().verifyConfirmation(response.verifyResponse)) {
         $(document).trigger('success');
-        $('#login-output').append('<b><- Server</b><br/>Successfully Authenticated! Shared Strong Session Key: <br/>'+me.getClient().sessionKey()+'<br/>');
+        $output.prepend('<b><- Server</b><br/>Successfully Authenticated! Shared Strong Session Key: <br/>' + me.getClient().sessionKey() + '<br/>');
       }
     }
 
-    $('#login-output').append('<hr/>');
+    $output.prepend('<hr/>');
   },
 
   getEmail: function () {
@@ -94,4 +98,4 @@ var Login = {
 
     return this.srpClient;
   }
-}
+};
