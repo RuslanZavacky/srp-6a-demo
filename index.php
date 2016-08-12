@@ -11,6 +11,7 @@ if (!empty($_POST['registerBtn'])) {
   ));
 
   if (empty($user)) {
+    /** @var RedBean_SimpleModel $user */
     $user = R::dispense('user');
     $user->email = $_POST['email'];
     $user->password_salt = $_POST['password_salt'];

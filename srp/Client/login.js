@@ -33,8 +33,12 @@ var Login = {
 
       $('#login-output').append('<b>-> Client, A</b><br/>' + data.challenge.A + '<br/>');
 
-      $.post(me.options.url, data, function () {
-        me.onChallengeResponse.apply(me, arguments);
+      $.post(me.options.url, data, function (response) {
+        if (response.error) {
+          $('#login-output').append('<b><- Server</b><br/>' + response.error + '<br/>');
+        } else {
+          me.onChallengeResponse(response);
+        }
       }, 'json');
 
       return false;

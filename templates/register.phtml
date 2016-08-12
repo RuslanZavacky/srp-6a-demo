@@ -145,7 +145,7 @@
         values[field.name] = field.value;
       });
 
-      $.post('register.php', values, function (response) {
+      $.post('index.php', values, function (response) {
         if (response.error) {
           $('#register-output').html(response.error);
         } else {
@@ -155,11 +155,6 @@
 
       return false;
     });
-
-//    var loginForm = $('#login-form');
-//    loginForm.on('submit.srp', function() {
-//
-//    });
   });
 </script>
 
