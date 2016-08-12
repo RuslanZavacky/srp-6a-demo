@@ -13,7 +13,7 @@ has been revised several times, and is currently at revision 6a. [Wikipedia](htt
 Requirements:
   * bower
   * composer
-  * PHP >= 5.4
+  * PHP >= 5.6
 
 `composer install && bower install`
 

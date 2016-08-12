@@ -4,6 +4,8 @@ namespace Rz\Controller;
 
 use RedBeanPHP;
 use RedBeanPHP\R;
+use Riimu\Kit\SecureRandom\Generator\OpenSSL;
+use Riimu\Kit\SecureRandom\SecureRandom;
 use Rz\Service\Srp;
 
 class AuthController
@@ -53,7 +55,8 @@ class AuthController
       if (empty($user)) {
         $result = array('error' => 'No user with such email');
       } else {
-        $srp = new Srp($user->password_verifier, $user->password_salt);
+        $srp = new Srp(new SecureRandom(new OpenSSL()));
+        $srp->prepare($user->password_verifier, $user->password_salt);
 
         $challenge = $srp->issueChallenge($_POST['challenge']['A']);
 
@@ -72,8 +75,6 @@ class AuthController
       if ($_POST['respondToChallenge']['M'] === $_SESSION['M']) {
         // put the key in the session which shows the the user is authenticated
         $_SESSION['SRP_AUTHENTICATED'] = true;
-
-        //$tmp = "".$_SESSION['SRP_AUTHENTICATED']." ".$_SESSION['SRP_USER_ID']." ".$_SESSION['SRP_SESSION_KEY'];
 
         // return the server proof (demonstrates server knew the actual registered verifier and so a valid shared key 'K')
         $result = array(
