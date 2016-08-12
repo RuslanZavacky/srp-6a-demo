@@ -29,7 +29,7 @@ before_script:
     - git config --global user.email travis@example.com
 
 script:
-    - vendor/bin/phpunit -c phpunit.xml
+    - vendor/bin/behat
 
 git:
   depth: 1

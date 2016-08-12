@@ -1,6 +1,6 @@
 <?php
 
-namespace Rz\Test\Mock;
+namespace Rz\Service;
 
 use Riimu\Kit\SecureRandom\Generator\AbstractGenerator;
 use Riimu\Kit\SecureRandom\GeneratorException;

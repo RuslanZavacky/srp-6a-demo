@@ -4,6 +4,7 @@ namespace Rz\Service;
 
 use phpseclib\Math\BigInteger;
 use Riimu\Kit\SecureRandom\SecureRandom;
+use Rz\Exception\InvalidKeyException;
 
 class Srp
 {
@@ -49,14 +50,14 @@ class Srp
   {
     $this->verifier = $verifier;
     $this->salt = $salt;
-    $this->N = $this->getBigInteger("EEAF0AB9ADB38DD69C33F80AFA8FC5E86072618775FF3C0B9EA2314C9C256576D674DF7496EA81D3383B4813D692C6E0E0D5D8E250B98BE48E495C1D6089DAD15DC7D7B46154D6B6CE8EF4AD69B15D4982559B297BCF1885C529F566660E57EC68EDBC3C05726CC02FD4CBF4976EAA9AFD5138FE8376435B9FC61D2FC0EB06E3", 16);
-    $this->g = $this->getBigInteger("2", 16);
+    $this->N = $this->getBigInteger('EEAF0AB9ADB38DD69C33F80AFA8FC5E86072618775FF3C0B9EA2314C9C256576D674DF7496EA81D3383B4813D692C6E0E0D5D8E250B98BE48E495C1D6089DAD15DC7D7B46154D6B6CE8EF4AD69B15D4982559B297BCF1885C529F566660E57EC68EDBC3C05726CC02FD4CBF4976EAA9AFD5138FE8376435B9FC61D2FC0EB06E3', 16);
+    $this->g = $this->getBigInteger('2', 16);
 
     $this->k = $this->getBigInteger($this->hash($this->N->toHex() . $this->g), 16);
 
     $this->v = $this->getBigInteger($verifier, 16);
 
-    $this->key = "";
+    $this->key = '';
 
     while (!$this->B || bcmod($this->B, $this->N) == 0) {
       $this->b = $this->getBigInteger($this->binary2hex($this->randomGenerator->getBytes(64)), 16);
@@ -73,7 +74,7 @@ class Srp
     $this->Ahex = $this->A->toHex();
 
     if ($this->A->powMod($this->getBigInteger(1), $this->N) === 0) {
-      throw new \Exception('Client sent invalid key: A mod N == 0.');
+      throw new InvalidKeyException('Client sent invalid key: A mod N == 0.');
     }
 
     $u = $this->getBigInteger($this->hash($this->Ahex . $this->Bhex), 16);
@@ -88,32 +89,11 @@ class Srp
     $this->HAMK = $this->hash($this->Ahex . $this->M . $Shex);
 
     return array(
-      "salt" => $this->getSalt(),
-      "B" => $this->Bhex
+      'salt' => $this->getSalt(),
+      'B' => $this->Bhex
     );
   }
 
-  public function getM()
-  {
-    return $this->M;
-  }
-
-  public function getHAMK()
-  {
-    return $this->HAMK;
-  }
-
-  public function getSesionKey()
-  {
-    return $this->key;
-  }
-
-  /**
-   * Hash function to be used in SRP
-   *
-   * @param $x
-   * @return string
-   */
   public function hash($x)
   {
     return strtolower(hash('sha256', $x));
@@ -133,6 +113,21 @@ class Srp
     }
 
     return $result;
+  }
+
+  public function getM()
+  {
+    return $this->M;
+  }
+
+  public function getHAMK()
+  {
+    return $this->HAMK;
+  }
+
+  public function getSesionKey()
+  {
+    return $this->key;
   }
 
   public function getVerifier()

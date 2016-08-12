@@ -1,4 +1,4 @@
-# SRP-6a PHP Implementation
+# SRP-6a PHP Implementation [![Build Status](https://travis-ci.org/RuslanZavacky/srp-6a-demo.svg?branch=master)](https://travis-ci.org/RuslanZavacky/srp-6a-demo)
 
 The SRP protocol has a number of desirable properties: it allows a user to authenticate
 themselves to a server, it is resistant to dictionary attacks mounted by an eavesdropper,
