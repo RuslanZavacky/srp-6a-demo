@@ -8,6 +8,9 @@ per connection attempt. One of the interesting properties of the protocol is tha
 two of the cryptographic primitives it uses are attacked, it is still secure. The SRP protocol
 has been revised several times, and is currently at revision 6a. [Wikipedia](https://en.wikipedia.org/wiki/Secure_Remote_Password_protocol)
 
+# SRP Protocol Design
+[Protocol Design](http://srp.stanford.edu/design.html)
+
 # Goal
 To give people example of using SRP in their applications, so they became more secure.
 
